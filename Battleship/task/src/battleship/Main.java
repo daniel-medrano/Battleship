@@ -7,6 +7,6 @@ public class Main {
 
         Battleship game = new Battleship();
         game.start();
+        game.askForCoordinates();
     }
 }
-
