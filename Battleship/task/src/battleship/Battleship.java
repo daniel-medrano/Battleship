@@ -26,7 +26,7 @@ public class Battleship {
     }
 
     public void printField() {
-        //Prints the field
+        //Prints the field to the user. Every time the user places a new ship in the matrix, the field is printed again.
         for (int row = 0; row <= size; row++) {
             for (int i = 0; i <= size; i++) {
                 if (field[row][i] == null) {
@@ -78,11 +78,12 @@ public class Battleship {
         } while (ship.sign == 0);
         printShip(ship);
     }
-
+    //This method checks if you wanna place a ship to close from another
     public boolean checkZone(int[][] coordinates, int horiOrVerti) {
         int constant;
         int min;
         int max;
+        //If horiOrVerti is 1, that means that the ship to be revise is horizontal.
         if (horiOrVerti == 1) {
             constant = coordinates[0][0];
             if (coordinates[0][1] < coordinates[1][1]) {
@@ -120,6 +121,7 @@ public class Battleship {
                     }
                 }
             }
+        //If horiOrVerti is 2, that means that the ship to be revise is vertical.
         } else if (horiOrVerti == 2) {
             constant = coordinates[0][1];
             if (coordinates[0][0] < coordinates[1][0]) {
@@ -161,17 +163,17 @@ public class Battleship {
     public void askForCoordinates(Ship ship) {
         int[][] coordinates;
         //Requests the values
-        int horiOrVerti = 0;
+        int horiOrVerti;
         String coor1 = scanner.next();
         String coor2 = scanner.next();
         //Verifies if the coordinates are in range.
         boolean inRange = (Tools.hasValuesColumn(coor1.substring(0,1), field) && Tools.hasValuesColumn(coor2.substring(0, 1), field)) && (Tools.hasValuesRow(coor1.substring(1,2), field) && Tools.hasValuesRow(coor2.substring(1, 2), field));
         if (inRange) {
+            //With the method toMatrix the coordinates like F3 and F7 are converted to numbers like (6,3) and (6,7)
             coordinates = Tools.toMatrix(coor1, coor2, field);
             int difference1 = Math.abs(coordinates[0][0] - coordinates[1][0]);
             int difference2 = Math.abs(coordinates[0][1] - coordinates[1][1]);
-            //This if avoids the ship from being diagonal, because both of the values of the input must have a common values, either the letter or the num.
-            //todo 1. Introduce here another if to corroborate if the coordinates of the ship to be revised are not on the "path" of the ones from another ship
+            //This if avoids the ship from being diagonal, because both of the values of the input must have a common values, either the letter or the num, and when they´re subtracted one of the values should be 0
             if (difference1 == 0 && (difference2 + 1 == ship.cells)) {
                 //Points out that the ship will be horizontal.
                 horiOrVerti = 1;
@@ -199,6 +201,17 @@ public class Battleship {
     }
 }
 
+class Player {
+    String shot;
+    boolean inRange;
+    Scanner scanner = new Scanner(System.in);
+    public void attack() {
+        System.out.println("Take a shot!");
+        shot = scanner.next();
+        inRange = (Tools.hasValuesColumn(shot.substring(0,1), field) && Tools.hasValuesColumn(shot.substring(0, 1), field));
+
+    }
+}
 class Ship {
     String name;
     int cells;

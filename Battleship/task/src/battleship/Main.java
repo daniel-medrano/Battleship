@@ -3,34 +3,28 @@ package battleship;
 public class Main {
 
     public static void main(String[] args) {
-        // Write your code here
+
+        Player player1 = new Player();
         //Initialization of the ships
-        Ship aircraftCarrier = new Ship(5, "Aircraft Carrier");
-        Ship battleship = new Ship(4, "Battleship");
-        Ship submarine = new Ship(3, "Submarine");
-        Ship cruiser = new Ship(3, "Cruiser");
-        Ship destroyer = new Ship(2, "Destroyer");
-
+        Ship[] ships = {
+                new Ship(5, "Aircraft Carrier"),
+                new Ship(4, "Battleship"),
+                new Ship(3, "Submarine"),
+                new Ship(3, "Cruiser"),
+                new Ship(2, "Destroyer")
+        };
+        //A game is initialized
         Battleship game = new Battleship();
-
+        //It creates the matrix of the battlefield and prints it.
         game.startBattlefield();
         game.printField();
-        game.placeShips(aircraftCarrier);
-        game.printField();
+        //The ships are place in the battlefield
+        for (Ship ship: ships) {
+            game.placeShips(ship);
+            game.printField();
+        }
+        System.out.println("\n" + "The game starts!" + "\n");
 
-        game.placeShips(battleship);
-        game.printField();
-
-        game.placeShips(submarine);
-        game.printField();
-
-        game.placeShips(cruiser);
-        game.printField();
-
-        game.placeShips(destroyer);
-        game.printField();
-
-
-
+        player1.attack();
     }
 }

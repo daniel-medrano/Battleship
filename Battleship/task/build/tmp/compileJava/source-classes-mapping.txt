@@ -1,6 +1,7 @@
+battleship/Tools.java
+ battleship.Tools
 battleship/Main.java
  battleship.Main
 battleship/Battleship.java
  battleship.Battleship
  battleship.Ship
- battleship.Tools
