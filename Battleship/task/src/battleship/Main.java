@@ -12,16 +12,21 @@ public class Main {
         Ship destroyer = new Ship(2, "Destroyer");
 
         Battleship game = new Battleship();
-        game.start();
+
+        game.startBattlefield();
         game.printField();
         game.placeShips(aircraftCarrier);
         game.printField();
+
         game.placeShips(battleship);
         game.printField();
+
         game.placeShips(submarine);
         game.printField();
+
         game.placeShips(cruiser);
         game.printField();
+
         game.placeShips(destroyer);
         game.printField();
 
