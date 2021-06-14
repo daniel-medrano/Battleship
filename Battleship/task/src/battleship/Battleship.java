@@ -61,7 +61,7 @@ public class Battleship {
         System.out.printf("Enter the coordinates of the %s (%d cells): ", ship.name, ship.cells);
         do {
             askForCoordinates(ship);
-        } while (ship.sign == 0);
+        } while (ship.isDeployed == false);
         printShip(ship);
     }
 
@@ -69,7 +69,7 @@ public class Battleship {
         int constant;
         int min;
         int max;
-        if (ship.sign == 1) {
+        if (ship.horizontal) {
             constant = ship.coordinates[0][0];
             if (ship.coordinates[0][1] < ship.coordinates[1][1]) {
                 min = ship.coordinates[0][1];
@@ -81,14 +81,14 @@ public class Battleship {
             for (int c = min; c <= max; c++ ) {
                 field.field[constant][c] = "O";
             }
-        } else if (ship.sign == 2) {
+        } else {
             constant = ship.coordinates[0][1];
-            if (ship.coordinates[0][0] < ship.coordinates[1][0]) {
-                min = ship.coordinates[0][0];
-                max = ship.coordinates[1][0];
-            } else {
+            if (ship.coordinates[0][0] > ship.coordinates[1][0]) {
                 min = ship.coordinates[1][0];
                 max = ship.coordinates[0][0];
+            } else {
+                min = ship.coordinates[0][0];
+                max = ship.coordinates[1][0];
             }
             for (int c = min; c <= max; c++ ) {
                 field.field[c][constant] = "O";
@@ -97,12 +97,12 @@ public class Battleship {
     }
 
     //This method checks if you wanna place a ship to close from another
-    public boolean checkZone(int[][] coordinates, int horiOrVerti) {
+    public boolean checkZone(int[][] coordinates, boolean horizontal, boolean vertical) {
         int constant;
         int min;
         int max;
         //If horiOrVerti is 1, that means that the ship to be revise is horizontal.
-        if (horiOrVerti == 1) {
+        if (horizontal) {
             constant = coordinates[0][0];
             if (coordinates[0][1] < coordinates[1][1]) {
                 min = coordinates[0][1];
@@ -140,7 +140,7 @@ public class Battleship {
                 }
             }
         //If horiOrVerti is 2, that means that the ship to be revise is vertical.
-        } else if (horiOrVerti == 2) {
+        } else if (vertical) {
             constant = coordinates[0][1];
             if (coordinates[0][0] < coordinates[1][0]) {
                 min = coordinates[0][0];
@@ -181,35 +181,30 @@ public class Battleship {
     public void askForCoordinates(Ship ship) {
         int[][] coordinates;
         //Requests the values
-        int horiOrVerti = 0;
         String coor1 = scanner.next().toUpperCase();
         String coor2 = scanner.next().toUpperCase();
 
-        int lenCoor1 = coor1.length();
-        int lenCoor2 = coor2.length();
+        coordinates = Tools.toMatrix(coor1, coor2, field.field);
         //Verifies if the coordinates are in range.
-        boolean inRange = (Tools.hasValuesColumn(coor1.substring(0,1), field.field) && Tools.hasValuesColumn(coor2.substring(0, 1), field.field)) && (Tools.hasValuesRow(coor1.substring(1, lenCoor1), field.field) && Tools.hasValuesRow(coor2.substring(1, lenCoor2), field.field));
+        boolean inRange = ((coordinates[0][0] >= 1 && coordinates[0][0] <= 10) && ((coordinates[0][1] >= 1 && coordinates[0][1] <= 10)) && (coordinates[1][0] >= 1 && coordinates[1][0] <= 10) && (coordinates[1][1] >= 1 && coordinates[1][1] <= 10));
         if (inRange) {
             //With the method toMatrix the coordinates like F3 and F7 are converted to numbers like (6,3) and (6,7)
-            coordinates = Tools.toMatrix(coor1, coor2, field.field);
-            int difference1 = Math.abs(coordinates[0][0] - coordinates[1][0]);
-            int difference2 = Math.abs(coordinates[0][1] - coordinates[1][1]);
+            boolean horizontal = (coordinates[0][0] == coordinates[1][0]) && (Math.abs(coordinates[0][1] - coordinates[1][1]) + 1 == ship.cells);
+            boolean vertical = (coordinates[0][1] == coordinates[1][1]) && (Math.abs(coordinates[0][0] - coordinates[1][0]) + 1 == ship.cells);
             //This if avoids the ship from being diagonal, because both of the values of the input must have a common values, either the letter or the num, and when they´re subtracted one of the values should be 0
-            if (difference1 == 0 && (difference2 + 1 == ship.cells)) {
+            if (horizontal) {
                 //Points out that the ship will be horizontal.
-                horiOrVerti = 1;
-                if (checkZone(coordinates, horiOrVerti)) {
-                    ship.sign = 1;
-                    ship.coordinates = coordinates;
+                if (checkZone(coordinates, horizontal, vertical)) {
+                    //The coordinates are assigned and gives permission to deploy the ship on the field
+                    ship.deploy(coordinates, horizontal);
                 } else {
                     System.out.println("Error! You placed it too close to another one. Try again: ");
                 }
-            } else if (difference2 == 0 && (difference1 + 1 == ship.cells)) {
+            } else if (vertical) {
                 //Points out that the ship will be vertical.
-                horiOrVerti = 2;
-                if (checkZone(coordinates, horiOrVerti)) {
-                    ship.sign = 2;
-                    ship.coordinates = coordinates;
+                if (checkZone(coordinates, horizontal, vertical)) {
+                    //The coordinates are assigned and gives permission to deploy the ship on the field
+                    ship.deploy(coordinates, horizontal);
                 } else {
                     System.out.println("Error! You placed it too close to another one. Try again: ");
                 }
@@ -253,10 +248,18 @@ class Player {
 class Ship {
     String name;
     int cells;
-    int sign = 0;
+    boolean isDeployed = false;
+    boolean horizontal = false;
     int[][] coordinates;
     Ship(int cells, String name) {
         this.name = name;
         this.cells = cells;
+    }
+
+    public void deploy(int[][] coordinates, boolean horizontal) {
+        this.coordinates = coordinates;
+        this.horizontal = horizontal;
+        isDeployed = true;
+
     }
 }

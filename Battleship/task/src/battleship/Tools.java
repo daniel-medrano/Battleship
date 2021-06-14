@@ -26,6 +26,7 @@ class Tools {
      * {letter, num}, A6
      * }
      * */
+    //TODO - Simplify the code by just using the matrix created here to determine if the coordinates entered are in range. Change this method to create and ordered matrix being able to identify which coordinates are bigger
     public static int[][] toMatrix(String letter1, String letter2, String[][] arr) {
         int[][] matrix = new int[2][2];
         //In case the string with coordinates has three elements, it would save the number with two digits: 10
