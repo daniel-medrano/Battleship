@@ -51,4 +51,19 @@ class Tools {
         }
         return matrix;
     }
+    public static int[] toArray(String letter1, String[][] arr) {
+        int[] matrix = new int[2];
+        //In case the string with coordinates has three elements, it would save the number with two digits: 10
+        if (letter1.length() == 2)
+            matrix[1] = Integer.parseInt(letter1.substring(1, 2));
+        else
+            matrix[1] = Integer.parseInt(letter1.substring(1, 3));
+        //Makes match with an element of the column 0 and the index of that match is saved.
+        for (int  e = 1; e <= arr.length - 1; e++) {
+            if (arr[e][0].equals(letter1.substring(0, 1))) {
+                matrix[0] = e;
+            }
+        }
+        return matrix;
+    }
 }

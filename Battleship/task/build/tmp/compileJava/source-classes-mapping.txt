@@ -4,4 +4,6 @@ battleship/Main.java
  battleship.Main
 battleship/Battleship.java
  battleship.Battleship
+ battleship.Field
+ battleship.Player
  battleship.Ship

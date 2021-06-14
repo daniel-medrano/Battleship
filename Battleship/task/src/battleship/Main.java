@@ -16,15 +16,15 @@ public class Main {
         //A game is initialized
         Battleship game = new Battleship();
         //It creates the matrix of the battlefield and prints it.
-        game.startBattlefield();
-        game.printField();
+        game.start();
         //The ships are place in the battlefield
         for (Ship ship: ships) {
             game.placeShips(ship);
-            game.printField();
+            game.refresh();
         }
         System.out.println("\n" + "The game starts!" + "\n");
-
+        game.refresh();
         player1.attack();
+
     }
 }
