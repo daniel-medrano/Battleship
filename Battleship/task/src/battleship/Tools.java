@@ -3,22 +3,6 @@ package battleship;
 
 //A class with useful methods.
 class Tools {
-    public static boolean hasValuesRow(String letter, String[][] arr ) {
-        for (int  element = 1; element <= arr.length - 1; element++) {
-            if (arr[0][element].equals(letter)) {
-                return true;
-            }
-        }
-        return false;
-    }
-    public static boolean hasValuesColumn(String letter, String[][] arr ) {
-        for (int element = 1; element <= arr.length - 1; element++) {
-            if (arr[element][0].equals(letter)) {
-                return true;
-            }
-        }
-        return false;
-    }
     //It creates a new matrix with coordinates.
     /*
      * Structure: coordinates = {
@@ -26,7 +10,6 @@ class Tools {
      * {letter, num}, A6
      * }
      * */
-    //TODO - Simplify the code by just using the matrix created here to determine if the coordinates entered are in range. Change this method to create and ordered matrix being able to identify which coordinates are bigger
     public static int[][] toMatrix(String letter1, String letter2, String[][] arr) {
         int[][] matrix = new int[2][2];
         //In case the string with coordinates has three elements, it would save the number with two digits: 10

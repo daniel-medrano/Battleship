@@ -20,10 +20,10 @@ public class Main {
         //The ships are place in the battlefield
         for (Ship ship: ships) {
             game.placeShips(ship);
-            game.refresh();
+            game.refreshField();
         }
         System.out.println("\n" + "The game starts!" + "\n");
-        game.refresh();
+        game.refreshFogOfWar();
         player1.attack();
 
     }

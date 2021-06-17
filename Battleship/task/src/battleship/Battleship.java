@@ -40,28 +40,41 @@ class Field {
     }
 }
 
+class FogOfWar extends Field {
+
+}
+
 public class Battleship {
     //Variables where the coordinates are.
     Scanner scanner = new Scanner(System.in);
-    private static Field field = new Field();
+    private static final Field field = new Field();
+    private static final FogOfWar fogOfWar = new FogOfWar();
 
     public void start() {
+        fogOfWar.createField();
         field.createField();
         field.printField();
     }
 
-    public void refresh() {
+    public void refreshField() {
         field.printField();
     }
+    public void refreshFogOfWar() {
+        fogOfWar.printField();
+    }
+
     public static Field getField() {
         return field;
+    }
+    public static Field getFogOFWar() {
+        return fogOfWar;
     }
 
     public void placeShips(Ship ship) {
         System.out.printf("Enter the coordinates of the %s (%d cells): ", ship.name, ship.cells);
         do {
             askForCoordinates(ship);
-        } while (ship.isDeployed == false);
+        } while (!ship.isDeployed);
         printShip(ship);
     }
 
@@ -116,25 +129,25 @@ public class Battleship {
                 //The letter Z indicates zone
                 if (min != 1) {
                     //This part revises if there´s an "O" in ZOOOO
-                    if (field.field[constant][min - 1] == "O") {
+                    if (field.field[constant][min - 1].equals("O")) {
                         return false;
                     }
                 }
                 if (max != 10) {
                     //This part revises if there´s an "O" in OOOOZ
-                    if (field.field[constant][max + 1] == "O") {
+                    if (field.field[constant][max + 1].equals("O")) {
                         return false;
                     }
                 }
                 if (constant != 10) {
                     //Revises if there are any other ships  or "O´s" under the ship.
-                    if (field.field[constant + 1][c] == "O") {
+                    if (field.field[constant + 1][c].equals("O")) {
                         return false;
                     }
                 }
                 if (constant != 1) {
                     //Revises if there are any other ships or "O´s" above the ship.
-                    if (field.field[constant - 1][c] == "O") {
+                    if (field.field[constant - 1][c].equals("O")) {
                         return false;
                     }
                 }
@@ -151,24 +164,24 @@ public class Battleship {
             }
             for (int c = min; c <= max; c++ ) {
                 if (min != 1) {
-                    if (field.field[min - 1][constant] == "O") {
+                    if (field.field[min - 1][constant].equals("O")) {
                         return false;
                     }
                 }
                 if (max != 10) {
-                    if (field.field[max + 1][constant] == "O") {
+                    if (field.field[max + 1][constant].equals("O")) {
                         return false;
                     }
                 }
                 if (constant != 10) {
                     //Revises if there are any other ships  or "O´s" under the ship.
-                    if (field.field[c][constant + 1] == "O") {
+                    if (field.field[c][constant + 1].equals("O")) {
                         return false;
                     }
                 }
                 if (constant != 1) {
                     //Revises if there are any other ships or "O´s" above the ship.
-                    if (field.field[c][constant - 1] == "O") {
+                    if (field.field[c][constant - 1].equals("O")) {
                         return false;
                     }
                 }
@@ -222,26 +235,28 @@ class Player {
     int[] shotCoordinates;
     boolean inRange;
     Scanner scanner = new Scanner(System.in);
-    Field field = Battleship.getField();
     public void attack() {
         System.out.println("\n" + "Take a shot!" + "\n");
         do {
             shot = scanner.next();
-            int lenShot = shot.length();
-            inRange = (Tools.hasValuesColumn(shot.substring(0, 1), field.field) && Tools.hasValuesRow(shot.substring(1, lenShot), field.field));
+            shotCoordinates = Tools.toArray(shot, Battleship.getField().field);
+            inRange = (shotCoordinates[0] >= 1 && shotCoordinates[0] <= 10) && (shotCoordinates[1] >= 1 && shotCoordinates[1] <= 10);
             if (!inRange) {
                 System.out.println("\n" + "Error! You entered the wrong coordinates! Try again:" + "\n");
             }
         } while (!inRange);
-        shotCoordinates = Tools.toArray(shot, field.field);
-        if (field.field[shotCoordinates[0]][shotCoordinates[1]] == "O") {
-            field.field[shotCoordinates[0]][shotCoordinates[1]] = "X";
-            field.printField();
+        if (Battleship.getField().field[shotCoordinates[0]][shotCoordinates[1]].equals("O")) {
+            Battleship.getField().field[shotCoordinates[0]][shotCoordinates[1]] = "X";
+            Battleship.getFogOFWar().field[shotCoordinates[0]][shotCoordinates[1]] = "X";
+            Battleship.getFogOFWar().printField();
             System.out.println("\n" + "You hit a ship!" + "\n");
+            Battleship.getField().printField();
         } else {
-            field.field[shotCoordinates[0]][shotCoordinates[1]] = "M";
-            field.printField();
+            Battleship.getField().field[shotCoordinates[0]][shotCoordinates[1]] = "M";
+            Battleship.getFogOFWar().field[shotCoordinates[0]][shotCoordinates[1]] = "M";
+            Battleship.getFogOFWar().printField();
             System.out.println("\n" + "You missed!" + "\n");
+            Battleship.getField().printField();
         }
     }
 }
